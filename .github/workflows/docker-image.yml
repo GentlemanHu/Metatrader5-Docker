@@ -27,5 +27,5 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: gentlemanhu/metatrader:latest
+          tags: ejtrader/metatrader:5
 
