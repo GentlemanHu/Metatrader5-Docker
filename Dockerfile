@@ -88,7 +88,23 @@ COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
 
 
-RUN apk update && apk add samba-winbind wine && ln -s /usr/bin/wine64 /usr/bin/wine
+# Install latest Wine
+RUN echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache \
+    wine@edgecommunity \
+    wine-staging@edgecommunity \
+    samba-winbind \
+    mesa-gl \
+    mesa-dri-gallium \
+    libpulse \
+    && ln -s /usr/bin/wine64 /usr/bin/wine
+
+# Configure Wine
+RUN winecfg && \
+    wine64 reg add "HKEY_CURRENT_USER\Software\Wine\Direct3D" /v "MaxVersionGL" /t REG_DWORD /d "0xffffffff" /f && \
+    wine64 reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v CurrentVersion /t REG_SZ /d "10.0" /f
 
 
 
