@@ -88,7 +88,7 @@ COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
 
 # 安装Wine
-RUN apk update && apk add samba-winbind wine && ln -s /usr/bin/wine64 /usr/bin/wine
+RUN apk update && apk add samba-winbind wine
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558
