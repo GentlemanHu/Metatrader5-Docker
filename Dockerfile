@@ -8,46 +8,15 @@ RUN git clone https://github.com/DenisKramer/st.git /work
 WORKDIR /work
 RUN make
 
-# 第二阶段: 构建和安装xdummy
+# 第二阶段: 构建Xdummy
 FROM alpine:3.20.0 AS xdummy-builder
 
 RUN apk add --no-cache make gcc freetype-dev \
             fontconfig-dev musl-dev xproto libx11-dev \
-            libxft-dev libxext-dev avahi-libs libcrypto3 libssl3 \
-            libvncserver libx11 libxdamage libxext libxfixes \
-            libxi libxinerama libxrandr libxtst musl \
-            samba-winbind linux-headers \
-            && apk add --no-cache x11vnc \
-            && mkdir -p /tmp/xdummy \
-            && cd /tmp/xdummy \
-            && echo '\
-#include <stdlib.h>\
-#include <stdio.h>\
-#include <dlfcn.h>\
-#include <X11/Xlib.h>\
-\
-int main(int argc, char **argv) {\
-    if (argc > 1 && !strcmp(argv[1], "-install")) {\
-        system("cc -shared -fPIC -o /usr/bin/Xdummy.so /tmp/xdummy.c");\
-        return 0;\
-    }\
-    return 0;\
-}\
-            ' > xdummy.c \
-            && cc -o Xdummy xdummy.c \
-            && cp Xdummy /usr/bin/Xdummy \
-            && echo '\
-#include <stdlib.h>\
-#include <stdio.h>\
-#include <X11/Xlib.h>\
-\
-void *handle = NULL;\
-\
-void XCloseDisplay(Display *d) {\
-  return;\
-}\
-            ' > /tmp/xdummy.c \
-            && cc -shared -fPIC -o /usr/bin/Xdummy.so /tmp/xdummy.c
+            libxft-dev libxext-dev avahi-libs libcrypto3 libssl3 libvncserver libx11 libxdamage libxext libxfixes libxi libxinerama libxrandr libxtst musl samba-winbind 
+RUN apk add --no-cache linux-headers
+RUN apk add x11vnc 
+RUN Xdummy -install
 
 
 # 下载并准备MetaTrader文件
@@ -69,9 +38,8 @@ ENV WINEPREFIX="/root/.wine"
 ENV WINEARCH="win64"
 ENV DISPLAY=":0"
 ENV USER="root"
-# 注意：请在实际部署时覆盖这个默认密码
-ARG DEFAULT_PASSWORD="root"
-ENV PASSWORD=${DEFAULT_PASSWORD}
+# 注意：在生产环境中应使用Docker secrets或环境变量注入而不是硬编码密码
+ENV PASSWORD="root"
 
 # 基本初始化和管理工具
 RUN apk --no-cache add supervisor sudo wget \
@@ -138,13 +106,10 @@ COPY assets/xinit/xinitrc.d /etc/X11/xinit/xinitrc.d
 
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
-COPY assets/fix-permissions.sh /root/fix-permissions.sh
-COPY assets/wine-config.sh /root/wine-config.sh
-COPY assets/reset-wine.sh /root/reset-wine.sh
-COPY assets/wine.desktop /usr/share/applications/wine.desktop
+COPY assets/dbus-setup.sh /root/dbus-setup.sh
 
-# 设置脚本权限并执行初始化
-RUN chmod +x /root/*.sh && /root/fix-permissions.sh
+# 设置脚本权限
+RUN chmod +x /root/*.sh
 
 # 安装Wine和X11输入相关包
 RUN apk update && apk add --no-cache \
@@ -157,14 +122,9 @@ RUN apk update && apk add --no-cache \
     dbus-x11 \
     mesa-gl \
     mesa-dri-gallium \
-    mesa-vulkan-swrast \
-    ttf-dejavu \
-    ttf-liberation \
-    eudev \
     libinput \
     xf86-input-evdev \
-    xf86-input-libinput \
-    openbox-libs
+    xf86-input-libinput
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558

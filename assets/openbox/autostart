@@ -6,18 +6,25 @@ xsetroot -solid "#333333" &
 # 设置键盘速率
 xset r rate 200 25 &
 
-# 预配置Wine
-export WINEPREFIX=/root/.wine
-export WINEARCH=win64
-export WINEDEBUG=-all
-export DISPLAY=:0
-
-# 确保Wine键盘设置正确
-/root/wine-config.sh &
-
 # 延迟后启动MetaTrader，确保环境已经完全就绪
 (
-    sleep 5
+    # 设置Wine环境变量
+    export WINEPREFIX=/root/.wine
+    export WINEARCH=win64
+    export DISPLAY=:0
+    
+    # 等待环境准备好
+    sleep 3
+    
+    # 配置Wine输入
+    wine reg add "HKEY_CURRENT_USER\\Control Panel\\Input Method" /v "EnableHexNumpad" /t REG_SZ /d "1" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "GrabFullscreen" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "UseTakeFocus" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "UseXIM" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Decorated" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Managed" /t REG_SZ /d "Y" /f
+    
+    # 启动MetaTrader
     cd /root/Metatrader 
     wine terminal64.exe /portable
 ) &
