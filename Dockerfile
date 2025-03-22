@@ -23,11 +23,12 @@ FROM gentlemanhu/pyzmq:latest
 
 # 设置环境变量
 USER root
-ENV WINEPREFIX=/root/.wine
-ENV WINEARCH=win64
-ENV DISPLAY :0
-ENV USER=root
-ENV PASSWORD=root
+ENV WINEPREFIX="/root/.wine"
+ENV WINEARCH="win64"
+ENV DISPLAY=":0"
+ENV USER="root"
+# 注意：在生产环境中应使用Docker secrets或环境变量注入而不是硬编码密码
+ENV PASSWORD="root"
 
 # 基本初始化和管理工具
 RUN apk --no-cache add supervisor sudo wget \
@@ -36,8 +37,7 @@ RUN apk --no-cache add supervisor sudo wget \
 
 # 安装X11服务器和虚拟设备
 RUN apk add --no-cache xorg-server xf86-video-dummy \
-    && apk add libressl3.1-libcrypto --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
-    && apk add libressl3.1-libssl --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
+    && apk add libcrypto3 libssl3 --no-cache \
     && apk add x11vnc --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
     && rm -rf /apk /tmp/* /var/cache/apk/*
 COPY --from=xdummy-builder /usr/bin/Xdummy.so /usr/bin/Xdummy.so
