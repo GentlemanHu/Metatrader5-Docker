@@ -18,6 +18,17 @@ RUN apk add --no-cache linux-headers
 RUN apk add x11vnc 
 RUN Xdummy -install
 
+
+# 下载并准备MetaTrader文件
+FROM alpine:3.20.0 AS mt5-downloader
+RUN apk add --no-cache wget tar
+WORKDIR /tmp
+# 从GitHub Release下载MetaTrader压缩包
+RUN wget -O mt5.tar.gz https://github.com/GentlemanHu/Metatrader5-Docker/releases/download/mt5_portable/mt5.tar.gz && \
+    mkdir -p /mt5 && \
+    tar -xvf mt5.tar.gz -C /mt5 && \
+    rm mt5.tar.gz
+
 # 最终阶段: 组装完整环境 - 使用预构建的PyZMQ镜像
 FROM gentlemanhu/pyzmq:latest
 
@@ -57,8 +68,15 @@ COPY assets/openbox/mayday/mayday-plane /usr/share/themes/mayday-plane
 COPY assets/openbox/mayday/thesis /usr/share/themes/thesis
 COPY assets/openbox/rc.xml /etc/xdg/openbox/rc.xml
 COPY assets/openbox/menu.xml /etc/xdg/openbox/menu.xml
+
+# 复制Metatrader基本目录结构
 COPY Metatrader /root/Metatrader
 
+# 仅替换Metatrader中的EXE文件
+COPY --from=mt5-downloader /mt5/terminal64.exe /root/Metatrader/
+COPY --from=mt5-downloader /mt5/MetaEditor64.exe /root/Metatrader/
+COPY --from=mt5-downloader /mt5/metatester64.exe /root/Metatrader/
+COPY --from=mt5-downloader /mt5/uninstall.exe /root/Metatrader/
 # 登录管理器
 RUN apk --no-cache add slim consolekit \
     && rm -rf /apk /tmp/* /var/cache/apk/*
