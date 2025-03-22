@@ -104,9 +104,13 @@ COPY assets/xinit/xinitrc.d /etc/X11/xinit/xinitrc.d
 
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
+COPY assets/fix-permissions.sh /root/fix-permissions.sh
 
-# 安装Wine
-RUN apk update && apk add samba-winbind wine
+# 设置脚本权限并执行初始化
+RUN chmod +x /root/*.sh && /root/fix-permissions.sh
+
+# 安装Wine和X11输入相关包
+RUN apk update && apk add samba-winbind wine xset setxkbmap libxkbcommon xkeyboard-config dbus-x11
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558
