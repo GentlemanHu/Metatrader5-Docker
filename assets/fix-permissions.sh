@@ -4,7 +4,9 @@
 
 chmod +x /root/start.sh
 chmod +x /root/x11vnc-session.sh
-chmod +x /etc/X11/xinit/xinitrc.d/80-wine-input.sh
+chmod +x /root/wine-config.sh
+chmod +x /root/reset-wine.sh
+chmod +x /etc/X11/xinit/xinitrc.d/*.sh
 
 # 创建dbus目录结构
 mkdir -p /var/run/dbus

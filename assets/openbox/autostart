@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# 设置背景色
+xsetroot -solid "#333333" &
+
+# 设置键盘速率
+xset r rate 200 25 &
+
+# 预配置Wine
+export WINEPREFIX=/root/.wine
+export WINEARCH=win64
+export WINEDEBUG=-all
+export DISPLAY=:0
+
+# 确保Wine键盘设置正确
+/root/wine-config.sh &
+
+# 延迟后启动MetaTrader，确保环境已经完全就绪
+(
+    sleep 5
+    cd /root/Metatrader 
+    wine terminal64.exe /portable
+) &
