@@ -105,12 +105,34 @@ COPY assets/xinit/xinitrc.d /etc/X11/xinit/xinitrc.d
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
 COPY assets/fix-permissions.sh /root/fix-permissions.sh
+COPY assets/wine-config.sh /root/wine-config.sh
+COPY assets/reset-wine.sh /root/reset-wine.sh
+COPY assets/wine.desktop /usr/share/applications/wine.desktop
 
 # 设置脚本权限并执行初始化
 RUN chmod +x /root/*.sh && /root/fix-permissions.sh
 
 # 安装Wine和X11输入相关包
-RUN apk update && apk add samba-winbind wine xset setxkbmap libxkbcommon xkeyboard-config dbus-x11
+RUN apk update && apk add --no-cache \
+    samba-winbind \
+    wine \
+    xset \
+    setxkbmap \
+    libxkbcommon \
+    xkeyboard-config \
+    dbus-x11 \
+    mesa-gl \
+    mesa-dri-gallium \
+    mesa-vulkan-swrast \
+    ttf-dejavu \
+    ttf-liberation \
+    ttf-ubuntu-font-family \
+    eudev \
+    input-utils \
+    libinput \
+    xf86-input-evdev \
+    xf86-input-libinput \
+    openbox-libs
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558

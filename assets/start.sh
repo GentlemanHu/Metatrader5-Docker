@@ -15,8 +15,12 @@ export WINEARCH=win64
 
 # 配置Wine键盘输入
 echo "正在配置Wine键盘设置..."
-winecfg
-wine reg add "HKEY_CURRENT_USER\\Control Panel\\Input Method" /v "EnableHexNumpad" /t REG_SZ /d "1" /f
+
+# 使用增强的Wine配置脚本
+sh /root/wine-config.sh
+
+# 确保Wine使用系统环境变量
+export WINEDLLOVERRIDES="mscoree,mshtml="
 
 # 配置X11输入设置
 xset r rate 200 25

@@ -189,6 +189,28 @@
   <!-- 'Left', 'Middle', 'Right' -->
 </dock>
 
+<!-- 窗口化应用程序配置 -->
+<applications>
+  <application class="*">
+    <decor>yes</decor>
+    <shade>no</shade>
+    <focus>yes</focus>
+    <desktop>all</desktop>
+    <layer>normal</layer>
+    <iconic>no</iconic>
+    <maximized>no</maximized>
+  </application>
+  <!-- 特别为Wine应用添加配置 -->
+  <application name="*wine*">
+    <decor>yes</decor>
+    <shade>no</shade>
+    <focus>yes</focus>
+    <desktop>all</desktop>
+    <layer>normal</layer>
+    <iconic>no</iconic>
+  </application>
+</applications>
+
 <keyboard>
   <chainQuitKey>C-g</chainQuitKey>
 
