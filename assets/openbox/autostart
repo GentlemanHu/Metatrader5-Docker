@@ -48,7 +48,8 @@ done &
     # 启动MetaTrader
 cd /root/Metatrader 
 # 添加/nomousegrab参数防止鼠标被锁定
-exec wine terminal64.exe /portable /nomousegrab
+# 添加/wfp参数确保窗口完整显示
+exec wine terminal64.exe /portable /nomousegrab /wfp
 ) &
 
 # 确保脚本不退出 - 这是保持会话活跃的关键
