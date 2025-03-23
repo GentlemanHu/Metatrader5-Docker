@@ -16,11 +16,8 @@ export WINEARCH=win64
 # 配置Wine键盘输入
 echo "正在配置Wine键盘设置..."
 
-# 使用我们的自定义配置脚本 - 避免winecfg弹出
-sh /root/configure-wine.sh
-
-# 不再直接使用winecfg
-# winecfg
+# 直接使用原始winecfg配置
+winecfg
 
 # 添加Wine键盘输入配置
 wine reg add "HKEY_CURRENT_USER\\Control Panel\\Input Method" /v "EnableHexNumpad" /t REG_SZ /d "1" /f

@@ -109,8 +109,6 @@ RUN chmod +x /etc/X11/xinit/Xsession /etc/X11/xinit/xinitrc.d/*.sh
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
 COPY assets/dbus-setup.sh /root/dbus-setup.sh
-COPY assets/periodic-fix.sh /root/periodic-fix.sh
-COPY assets/configure-wine.sh /root/configure-wine.sh
 
 # 设置脚本权限
 RUN chmod +x /root/*.sh
