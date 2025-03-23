@@ -103,6 +103,8 @@ RUN apk add --no-cache xset \
     && rm -rf /apk /tmp/* /var/cache/apk/*
 COPY assets/xinit/Xresources /etc/X11/Xresources
 COPY assets/xinit/xinitrc.d /etc/X11/xinit/xinitrc.d
+COPY assets/xinit/Xsession /etc/X11/xinit/Xsession
+RUN chmod +x /etc/X11/xinit/Xsession /etc/X11/xinit/xinitrc.d/*.sh
 
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
