@@ -25,5 +25,15 @@ wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "UseXIM" /t REG_
 wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Decorated" /t REG_SZ /d "Y" /f
 wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Managed" /t REG_SZ /d "Y" /f
 
-# 配置X11输入设置
-xset r rate 200 25
+# 设置X11键盘速率
+xset r rate 500 15
+
+# 禁用自动重复键 - 避免键盘重复输入问题
+xset -r
+
+# 重置X输入设备
+xinput list 2>/dev/null | grep -i keyboard | grep -o 'id=[0-9]*' | cut -d= -f2 | while read id; do
+  xinput disable $id 2>/dev/null || true
+  sleep 0.2
+  xinput enable $id 2>/dev/null || true
+done

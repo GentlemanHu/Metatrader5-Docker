@@ -128,8 +128,7 @@ RUN apk update && apk add --no-cache \
     libinput \
     xf86-input-evdev \
     xf86-input-libinput \
-    xinput \
-    wmctrl
+    xinput
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558

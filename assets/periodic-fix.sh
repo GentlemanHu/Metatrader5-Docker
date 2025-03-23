@@ -27,8 +27,8 @@ while true; do
   
   # 修复OpenBox窗口管理
   if pidof openbox >/dev/null; then
-    # 重新设置窗口堆叠顺序
-    wmctrl -k off >/dev/null 2>&1 || true
+    # 重新配置OpenBox
+    openbox --reconfigure >/dev/null 2>&1 || true
   fi
   
   # 每60秒运行一次

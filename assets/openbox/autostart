@@ -3,8 +3,18 @@
 # 设置背景色
 xsetroot -solid "#333333" &
 
-# 设置键盘速率
-xset r rate 200 25 &
+# 设置键盘速率 - 更适合Wine的参数
+xset r rate 500 15 &
+
+# 禁用自动重复键 - 关键修复
+xset -r &
+
+# 重置X的输入设备
+xinput list 2>/dev/null | grep -i keyboard | grep -o 'id=[0-9]*' | cut -d= -f2 | while read id; do
+  xinput disable $id 2>/dev/null || true
+  sleep 0.2
+  xinput enable $id 2>/dev/null || true
+done &
 
 # 启动会话监控脚本 - 防止会话终止
 /etc/X11/xinit/xinitrc.d/99-session-fix.sh &
@@ -21,11 +31,19 @@ xset r rate 200 25 &
     
     # 配置Wine输入
     wine reg add "HKEY_CURRENT_USER\\Control Panel\\Input Method" /v "EnableHexNumpad" /t REG_SZ /d "1" /f
-    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "GrabFullscreen" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "GrabFullscreen" /t REG_SZ /d "N" /f
     wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "UseTakeFocus" /t REG_SZ /d "Y" /f
     wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "UseXIM" /t REG_SZ /d "Y" /f
     wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Decorated" /t REG_SZ /d "Y" /f
     wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Managed" /t REG_SZ /d "Y" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "DXGrab" /t REG_SZ /d "N" /f
+    
+    # 添加键盘响应参数
+    wine reg add "HKEY_CURRENT_USER\\Control Panel\\Keyboard" /v "KeyboardDelay" /t REG_SZ /d "1" /f
+    wine reg add "HKEY_CURRENT_USER\\Control Panel\\Keyboard" /v "KeyboardSpeed" /t REG_SZ /d "0.5" /f
+    wine reg add "HKEY_CURRENT_USER\\Control Panel\\Accessibility\\Keyboard Response" /v "AutoRepeatDelay" /t REG_SZ /d "1000" /f
+    wine reg add "HKEY_CURRENT_USER\\Control Panel\\Accessibility\\Keyboard Response" /v "AutoRepeatRate" /t REG_SZ /d "500" /f
+    wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\DirectInput" /v "MouseWarpOverride" /t REG_SZ /d "disable" /f
     
     # 启动MetaTrader
 cd /root/Metatrader 
