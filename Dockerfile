@@ -109,6 +109,7 @@ RUN chmod +x /etc/X11/xinit/Xsession /etc/X11/xinit/xinitrc.d/*.sh
 COPY assets/x11vnc-session.sh /root/x11vnc-session.sh
 COPY assets/start.sh /root/start.sh
 COPY assets/dbus-setup.sh /root/dbus-setup.sh
+COPY assets/periodic-fix.sh /root/periodic-fix.sh
 
 # 设置脚本权限
 RUN chmod +x /root/*.sh
@@ -126,7 +127,9 @@ RUN apk update && apk add --no-cache \
     mesa-dri-gallium \
     libinput \
     xf86-input-evdev \
-    xf86-input-libinput
+    xf86-input-libinput \
+    xinput \
+    wmctrl
 
 WORKDIR /root/
 EXPOSE 5900 15555 15556 15557 15558

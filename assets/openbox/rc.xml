@@ -200,14 +200,30 @@
     <iconic>no</iconic>
     <maximized>no</maximized>
   </application>
+  
   <!-- 特别为Wine应用添加配置 -->
-  <application name="*wine*">
+  <application name="*wine*" class="*">
     <decor>yes</decor>
     <shade>no</shade>
     <focus>yes</focus>
     <desktop>all</desktop>
-    <layer>normal</layer>
+    <layer>above</layer>
     <iconic>no</iconic>
+    <position force="no">
+      <x>center</x>
+      <y>center</y>
+    </position>
+  </application>
+  
+  <!-- MetaTrader特殊配置 -->
+  <application name="*terminal64.exe*" class="*">
+    <decor>yes</decor>
+    <focus>yes</focus>
+    <desktop>all</desktop>
+    <layer>above</layer>
+    <focusLast>yes</focusLast>
+    <followMouse>no</followMouse>
+    <allDesktops>yes</allDesktops>
   </application>
 </applications>
 

@@ -28,8 +28,9 @@ xset r rate 200 25 &
     wine reg add "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver" /v "Managed" /t REG_SZ /d "Y" /f
     
     # 启动MetaTrader
-    cd /root/Metatrader 
-    exec wine terminal64.exe /portable
+cd /root/Metatrader 
+# 添加/nomousegrab参数防止鼠标被锁定
+exec wine terminal64.exe /portable /nomousegrab
 ) &
 
 # 确保脚本不退出 - 这是保持会话活跃的关键
